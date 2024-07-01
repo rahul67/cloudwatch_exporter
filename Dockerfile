@@ -1,4 +1,6 @@
-FROM eclipse-temurin:17-jdk-focal as builder
+FROM bellsoft/liberica-openjdk-alpine:17 as builder
+
+RUN apk update && apk add coreutils-sha512sum tar bash
 
 SHELL ["/bin/bash", "-xe", "-o", "pipefail", "-c"]
 
@@ -21,7 +23,7 @@ ENV MAVEN_OPTS "-Djdk.lang.Process.launchMechanism=vfork"
 RUN mvn package \
  && mv target/cloudwatch_exporter-*-with-dependencies.jar /cloudwatch_exporter.jar
 
-FROM eclipse-temurin:17-jre-focal as runner
+FROM bellsoft/liberica-openjdk-alpine:17 as runner
 LABEL maintainer="The Prometheus Authors <prometheus-developers@googlegroups.com>"
 EXPOSE 9106
 
